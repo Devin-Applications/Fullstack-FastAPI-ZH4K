@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Portfolio
-from schemas import PortfolioCreate, PortfolioUpdate
+from app.models import Portfolio
+from app.schemas import PortfolioCreate, PortfolioUpdate
 import uuid
 
 def get_portfolio(db: Session, portfolio_id: uuid.UUID):

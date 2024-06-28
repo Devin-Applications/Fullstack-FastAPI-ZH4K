@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from app.dependencies.database import Base  # Import Base from app.dependencies.database
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-
-Base = declarative_base()
 
 class User(Base):
     __tablename__ = "users"
