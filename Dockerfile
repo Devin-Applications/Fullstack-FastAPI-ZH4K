@@ -27,4 +27,4 @@ WORKDIR /app
 ADD . /app
 
 # Command to run the uvicorn server
-CMD ["python", "-m", "backend.app.main", "--mode", "prod", "--host", "0.0.0.0"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]
