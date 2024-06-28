@@ -1,6 +1,6 @@
 import argparse
 import os
-from backend.app.core.config import get_settings
+from app.core.config import get_settings
 
 # Command-line argument parsing
 parser = argparse.ArgumentParser(description="Run the FastAPI application.")
