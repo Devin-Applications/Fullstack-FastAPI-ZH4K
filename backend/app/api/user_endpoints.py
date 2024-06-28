@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 import uuid
 
-from backend.app.dependencies import get_db
-from backend.app.schemas import User, UserCreate, UserUpdate
-from backend.app.crud import user_crud
+from app.dependencies import get_db
+from app.schemas import User, UserCreate, UserUpdate
+from app.crud import user_crud
 
 router = APIRouter()
 
