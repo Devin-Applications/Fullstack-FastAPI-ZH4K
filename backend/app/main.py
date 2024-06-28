@@ -12,6 +12,7 @@ from backend.app.api.v1.endpoints import message, doc, base
 from backend.app.dependencies.database import init_db, AsyncSessionLocal
 from backend.app.crud.message import create_message_dict_async
 from backend.data.init_data import models_data
+from backend.app.api import user_endpoints, portfolio_endpoints
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -60,14 +61,16 @@ async def add_doc_protect(request: Request, call_next):
     response = await call_next(request)
     return response
 # Add session middleware with a custom expiration time (e.g., 30 minutes)
-app.add_middleware(SessionMiddleware, 
-                   secret_key="your_secret_key", 
+app.add_middleware(SessionMiddleware,
+                   secret_key="your_secret_key",
                    max_age=18000)  # 18000 seconds = 300 minutes
 
 # Add the routers to the FastAPI app
 app.include_router(base.router, prefix="", tags=["main"])
 app.include_router(doc.router, prefix="", tags=["doc"])
 app.include_router(message.router, prefix="/api/v1", tags=["message"])
+app.include_router(user_endpoints.router, prefix="/api/v1", tags=["user"])
+app.include_router(portfolio_endpoints.router, prefix="/api/v1", tags=["portfolio"])
 
 
 if __name__ == "__main__":
