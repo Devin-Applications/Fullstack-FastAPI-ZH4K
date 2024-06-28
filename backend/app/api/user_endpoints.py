@@ -20,8 +20,9 @@ def create_user(user: UserCreate, db: Session = Depends(get_sync_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
     # Hash the password before creating the user
     hashed_password = pwd_context.hash(user.password)
-    user.hashed_password = hashed_password
-    return user_crud.create_user(db=db, user=user)
+    user_data = user.dict()
+    user_data['hashed_password'] = hashed_password
+    return user_crud.create_user(db=db, user=UserCreate(**user_data))
 
 @router.get("/users/", response_model=List[User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_sync_db)):
