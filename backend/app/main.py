@@ -11,7 +11,7 @@ from app.core.init_settings import args, global_settings
 from app.api.v1.endpoints import message, doc, base
 from app.dependencies.database import init_db, AsyncSessionLocal
 from app.crud.message import create_message_dict_async
-from app.data.init_data import models_data
+from data.init_data import models_data
 from app.api import user_endpoints, portfolio_endpoints
 
 @asynccontextmanager
