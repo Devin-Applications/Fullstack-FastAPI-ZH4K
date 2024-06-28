@@ -7,7 +7,7 @@ class PortfolioBase(BaseModel):
     description: Optional[str] = None
 
 class PortfolioCreate(PortfolioBase):
-    pass
+    user_id: uuid.UUID
 
 class PortfolioUpdate(PortfolioBase):
     title: Optional[str] = None
@@ -17,4 +17,4 @@ class Portfolio(PortfolioBase):
     id: uuid.UUID
 
     class Config:
-        orm_mode: True
+        orm_mode = True
