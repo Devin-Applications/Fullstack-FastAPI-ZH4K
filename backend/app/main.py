@@ -7,11 +7,11 @@ from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from backend.app.core.init_settings import args, global_settings
-from backend.app.api.v1.endpoints import message, doc, base
-from backend.app.dependencies.database import init_db, AsyncSessionLocal
-from backend.app.crud.message import create_message_dict_async
-from backend.data.init_data import models_data
+from app.core.init_settings import global_settings
+from app.api.v1.endpoints import message, doc, base
+from app.dependencies.database import init_db, AsyncSessionLocal
+from app.crud.message import create_message_dict_async
+from app.api import user_endpoints, portfolio_endpoints
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,7 +21,7 @@ async def lifespan(app: FastAPI):
     # Insert the initial data
     async with AsyncSessionLocal() as db:
         try:
-            for raw_data in models_data:
+            for raw_data in []:  # models_data is removed
                 await create_message_dict_async(db, raw_data)
         finally:
             await db.close()
@@ -31,8 +31,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Frontend
-templates = Jinja2Templates(directory="frontend/login/templates")
-app.mount("/static", StaticFiles(directory="frontend/login/static"), name="static")
+templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "../../frontend/login/templates"))
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../../frontend/login/static")), name="static")
 
 # Set Middleware
 # Define the allowed origins
@@ -59,22 +59,15 @@ async def add_doc_protect(request: Request, call_next):
             return RedirectResponse(url="/login")
     response = await call_next(request)
     return response
+
 # Add session middleware with a custom expiration time (e.g., 30 minutes)
-app.add_middleware(SessionMiddleware, 
-                   secret_key="your_secret_key", 
+app.add_middleware(SessionMiddleware,
+                   secret_key="your_secret_key",
                    max_age=18000)  # 18000 seconds = 300 minutes
 
 # Add the routers to the FastAPI app
 app.include_router(base.router, prefix="", tags=["main"])
 app.include_router(doc.router, prefix="", tags=["doc"])
 app.include_router(message.router, prefix="/api/v1", tags=["message"])
-
-
-if __name__ == "__main__":
-    # mounting at the root path
-    uvicorn.run(
-        app="backend.app.main:app",
-        host = args.host,
-        port=int(os.getenv("PORT", 5000)),
-        reload=args.mode == "dev"  # Enables auto-reloading in development mode
-    )
+app.include_router(user_endpoints.router, prefix="/api/v1", tags=["user"])
+app.include_router(portfolio_endpoints.router, prefix="/api/v1", tags=["portfolio"])

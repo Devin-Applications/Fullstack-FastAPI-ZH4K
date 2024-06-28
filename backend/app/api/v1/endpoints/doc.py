@@ -3,7 +3,7 @@ from fastapi import Form, Request
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from backend.security.authentication import authenticate_user
+from security.authentication import authenticate_user
 
 router = APIRouter()
 templates = Jinja2Templates(directory="frontend/login/templates")
@@ -21,10 +21,8 @@ async def login(request: Request, username: str = Form(...), password: str = For
     else:
         message = "Invalid credentials"
         return templates.TemplateResponse("login.html", {"request": request, "message": message})
-    
+
 @router.get("/logout", response_class=HTMLResponse)
 async def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/login")
-
-
