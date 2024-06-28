@@ -3,9 +3,9 @@ from uuid import UUID
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.dependencies.database import get_sync_db, get_async_db
-from backend.app.models import Message
-from backend.app.schemas import (
+from app.dependencies.database import get_sync_db, get_async_db
+from app.models import Message
+from app.schemas import (
     MessageBase,
     MessageCreate,
 )
@@ -22,7 +22,7 @@ class MessageService:
         self.db_sync.commit()
         self.db_sync.refresh(db_message)
         return db_message
-    
+
     async def create_message_async(self, message_data: MessageCreate) -> Message:
         db_message = Message(**message_data.model_dump())
         self.db_async.add(db_message)
@@ -61,6 +61,6 @@ async def create_message_dict_async(db: AsyncSession, data: dict):
     # If not, insert the new model asynchronously
     db_data = Message(**data)
     db.add(db_data)
-    await db.commit()  
-    await db.refresh(db_data)  
+    await db.commit()
+    await db.refresh(db_data)
     return db_data

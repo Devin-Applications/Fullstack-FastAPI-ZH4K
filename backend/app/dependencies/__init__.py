@@ -1,4 +1,4 @@
-from backend.app.dependencies.database import get_sync_db, get_async_db
+from app.dependencies.database import get_sync_db, get_async_db
 
 # Synchronous database dependency
 def get_db():
