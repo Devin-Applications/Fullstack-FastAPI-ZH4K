@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 import uuid
+from passlib.context import CryptContext
 
 from app.dependencies import get_sync_db
 from app.schemas import User, UserCreate, UserUpdate
@@ -9,11 +10,17 @@ from app.crud import user_crud
 
 router = APIRouter()
 
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 @router.post("/users/", response_model=User)
 def create_user(user: UserCreate, db: Session = Depends(get_sync_db)):
     db_user = user_crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    # Hash the password before creating the user
+    hashed_password = pwd_context.hash(user.password)
+    user.hashed_password = hashed_password
     return user_crud.create_user(db=db, user=user)
 
 @router.get("/users/", response_model=List[User])
