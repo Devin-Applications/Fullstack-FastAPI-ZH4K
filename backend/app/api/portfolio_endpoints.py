@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 import uuid
 
-from backend.app.dependencies import get_db
-from backend.app.schemas import Portfolio, PortfolioCreate, PortfolioUpdate
-from backend.app.crud import portfolio_crud
+from app.dependencies import get_db
+from app.schemas import Portfolio, PortfolioCreate, PortfolioUpdate
+from app.crud import portfolio_crud
 
 router = APIRouter()
 

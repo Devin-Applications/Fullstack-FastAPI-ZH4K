@@ -7,7 +7,7 @@ from fastapi.responses import RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from app.core.init_settings import args, global_settings
+from app.core.init_settings import global_settings
 from app.api.v1.endpoints import message, doc, base
 from app.dependencies.database import init_db, AsyncSessionLocal
 from app.crud.message import create_message_dict_async
@@ -60,6 +60,7 @@ async def add_doc_protect(request: Request, call_next):
             return RedirectResponse(url="/login")
     response = await call_next(request)
     return response
+
 # Add session middleware with a custom expiration time (e.g., 30 minutes)
 app.add_middleware(SessionMiddleware,
                    secret_key="your_secret_key",
@@ -72,12 +73,11 @@ app.include_router(message.router, prefix="/api/v1", tags=["message"])
 app.include_router(user_endpoints.router, prefix="/api/v1", tags=["user"])
 app.include_router(portfolio_endpoints.router, prefix="/api/v1", tags=["portfolio"])
 
-
 if __name__ == "__main__":
     # mounting at the root path
     uvicorn.run(
         app="app.main:app",
-        host = args.host,
+        host="0.0.0.0",
         port=int(os.getenv("PORT", 5000)),
-        reload=args.mode == "dev"  # Enables auto-reloading in development mode
+        reload=True  # Enables auto-reloading in development mode
     )
