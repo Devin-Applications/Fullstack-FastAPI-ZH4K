@@ -31,8 +31,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Frontend
-templates = Jinja2Templates(directory="frontend/login/templates")
-app.mount("/static", StaticFiles(directory="frontend/login/static"), name="static")
+templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "../../frontend/login/templates"))
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "../../frontend/login/static")), name="static")
 
 # Set Middleware
 # Define the allowed origins
