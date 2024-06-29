@@ -7,9 +7,12 @@ def get_portfolio(db: Session, portfolio_id: uuid.UUID):
     return db.query(Portfolio).filter(Portfolio.id == portfolio_id).first()
 
 def get_portfolios_by_user(db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
+    print(f"get_portfolios_by_user called with user_id: {user_id}, skip: {skip}, limit: {limit}")
+    print(f"db object type: {type(db)}")
     return db.query(Portfolio).filter(Portfolio.user_id == user_id).offset(skip).limit(limit).all()
 
 def create_portfolio(db: Session, portfolio: PortfolioCreate):
+    print(f"create_portfolio called with portfolio: {portfolio}")
     db_portfolio = Portfolio(
         user_id=portfolio.user_id,
         title=portfolio.title,

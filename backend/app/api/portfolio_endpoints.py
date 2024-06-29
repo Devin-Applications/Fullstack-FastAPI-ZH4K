@@ -15,6 +15,7 @@ def create_portfolio(portfolio: PortfolioCreate, db: Session = Depends(get_sync_
 
 @router.get("/portfolios/", response_model=List[Portfolio])
 def read_portfolios(user_id: uuid.UUID, skip: int = 0, limit: int = 100, db: Session = Depends(get_sync_db)):
+    print(f"read_portfolios called with user_id: {user_id}, skip: {skip}, limit: {limit}")
     portfolios = portfolio_crud.get_portfolios_by_user(db, user_id=user_id, skip=skip, limit=limit)
     return portfolios
 
