@@ -12,4 +12,4 @@ console_handler.setLevel(logging.INFO)
 logging.basicConfig(level=logging.INFO, handlers=[console_handler])
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=True, log_config=None)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8080, log_config=None)
